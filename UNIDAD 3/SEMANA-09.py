@@ -1,150 +1,141 @@
 class Producto:
+    """
+    Representa un producto dentro del inventario.
+    """
     def __init__(self, id_producto, nombre, cantidad, precio):
-        self._id = id_producto
-        self._nombre = nombre
-        self._cantidad = cantidad
-        self._precio = precio
+        self.id_producto = id_producto
+        self.nombre = nombre
+        self.cantidad = cantidad
+        self.precio = precio
 
-    @property
-    def id(self):
-        return self._id
+    def actualizar_cantidad(self, nueva_cantidad):
+        """Actualiza la cantidad disponible del producto."""
+        self.cantidad = nueva_cantidad
 
-    @property
-    def nombre(self):
-        return self._nombre
-
-    @nombre.setter
-    def nombre(self, nuevo_nombre):
-        self._nombre = nuevo_nombre
-
-    @property
-    def cantidad(self):
-        return self._cantidad
-
-    @cantidad.setter
-    def cantidad(self, nueva_cantidad):
-        self._cantidad = nueva_cantidad
-
-    @property
-    def precio(self):
-        return self._precio
-
-    @precio.setter
-    def precio(self, nuevo_precio):
-        self._precio = nuevo_precio
+    def actualizar_precio(self, nuevo_precio):
+        """Modifica el precio del producto."""
+        self.precio = nuevo_precio
 
     def __str__(self):
-        return f"ID: {self._id}, Nombre: {self._nombre}, Cantidad: {self._cantidad}, Precio: ${self._precio:.2f}"
+        return f"ID: {self.id_producto} | Nombre: {self.nombre} | Cantidad: {self.cantidad} | Precio: ${self.precio:.2f}"
 
 
 class Inventario:
+    """
+    Gestiona el inventario de productos.
+    """
     def __init__(self):
         self.productos = {}
 
     def agregar_producto(self, producto):
-        if producto.id in self.productos:
-            print("Error: Ya existe un producto con ese ID.")
+        """Añade un producto nuevo si su ID no está registrado."""
+        if producto.id_producto in self.productos:
+            print("Error: El ID del producto ya existe.")
         else:
-            self.productos[producto.id] = producto
-            print("Producto agregado exitosamente.")
+            self.productos[producto.id_producto] = producto
+            print("Producto agregado correctamente.")
 
     def eliminar_producto(self, id_producto):
+        """Elimina un producto del inventario según su ID."""
         if id_producto in self.productos:
             del self.productos[id_producto]
-            print("Producto eliminado exitosamente.")
+            print("Producto eliminado correctamente.")
         else:
             print("Error: Producto no encontrado.")
 
-    def actualizar_producto(self, id_producto, nueva_cantidad=None, nuevo_precio=None):
+    def actualizar_producto(self, id_producto, cantidad=None, precio=None):
+        """Modifica la cantidad y/o precio de un producto."""
         if id_producto in self.productos:
-            producto = self.productos[id_producto]
-            if nueva_cantidad is not None:
-                producto.cantidad = nueva_cantidad
-            if nuevo_precio is not None:
-                producto.precio = nuevo_precio
-            print("Producto actualizado exitosamente.")
+            if cantidad is not None:
+                self.productos[id_producto].actualizar_cantidad(cantidad)
+            if precio is not None:
+                self.productos[id_producto].actualizar_precio(precio)
+            print("Producto actualizado correctamente.")
         else:
             print("Error: Producto no encontrado.")
 
     def buscar_producto(self, nombre):
-        productos_encontrados = [p for p in self.productos.values() if nombre.lower() in p.nombre.lower()]
-        if productos_encontrados:
-            for p in productos_encontrados:
+        """Busca productos por coincidencia parcial en el nombre."""
+        encontrados = [p for p in self.productos.values() if nombre.lower() in p.nombre.lower()]
+        if encontrados:
+            for p in encontrados:
                 print(p)
         else:
             print("No se encontraron productos con ese nombre.")
 
     def mostrar_productos(self):
+        """Muestra todos los productos registrados."""
         if self.productos:
             for producto in self.productos.values():
                 print(producto)
         else:
-            print("No hay productos en el inventario.")
+            print("El inventario está vacío.")
 
 
-def obtener_entero(mensaje):
+def solicitar_entero(mensaje):
+    """Solicita un número entero al usuario asegurando una entrada válida."""
     while True:
         try:
             return int(input(mensaje))
         except ValueError:
-            print("Error: Debes ingresar un número entero.")
+            print("Entrada no válida. Ingrese un número entero.")
 
 
-def obtener_flotante(mensaje):
+def solicitar_flotante(mensaje):
+    """Solicita un número decimal al usuario asegurando una entrada válida."""
     while True:
         try:
             return float(input(mensaje))
         except ValueError:
-            print("Error: Debes ingresar un número válido.")
+            print("Entrada no válida. Ingrese un número válido.")
 
 
 def menu():
+    """Interfaz interactiva para la gestión del inventario."""
     inventario = Inventario()
 
     while True:
-        print("\n--- Sistema de Gestión de Inventarios ---")
-        print("1. Añadir nuevo producto")
-        print("2. Eliminar producto por ID")
-        print("3. Actualizar producto por ID")
-        print("4. Buscar producto por nombre")
-        print("5. Mostrar todos los productos")
+        print("\n--- Menú de Gestión de Inventarios ---")
+        print("1. Agregar producto")
+        print("2. Eliminar producto")
+        print("3. Actualizar producto")
+        print("4. Buscar producto")
+        print("5. Mostrar inventario")
         print("0. Salir")
 
-        eleccion = input("Elige una opción: ")
+        opcion = input("Seleccione una opción: ")
 
-        if eleccion == '1':
+        if opcion == '1':
             id_producto = input("ID del producto: ")
             nombre = input("Nombre del producto: ")
-            cantidad = obtener_entero("Cantidad del producto: ")
-            precio = obtener_flotante("Precio del producto: ")
-            producto = Producto(id_producto, nombre, cantidad, precio)
-            inventario.agregar_producto(producto)
+            cantidad = solicitar_entero("Cantidad: ")
+            precio = solicitar_flotante("Precio: ")
+            inventario.agregar_producto(Producto(id_producto, nombre, cantidad, precio))
 
-        elif eleccion == '2':
+        elif opcion == '2':
             id_producto = input("ID del producto a eliminar: ")
             inventario.eliminar_producto(id_producto)
 
-        elif eleccion == '3':
+        elif opcion == '3':
             id_producto = input("ID del producto a actualizar: ")
-            cantidad = input("Nueva cantidad (deja en blanco para no cambiar): ")
-            precio = input("Nuevo precio (deja en blanco para no cambiar): ")
-            nueva_cantidad = int(cantidad) if cantidad else None
-            nuevo_precio = float(precio) if precio else None
-            inventario.actualizar_producto(id_producto, nueva_cantidad, nuevo_precio)
+            cantidad = input("Nueva cantidad (Enter para omitir): ")
+            precio = input("Nuevo precio (Enter para omitir): ")
+            inventario.actualizar_producto(id_producto,
+                                           int(cantidad) if cantidad else None,
+                                           float(precio) if precio else None)
 
-        elif eleccion == '4':
+        elif opcion == '4':
             nombre = input("Nombre del producto a buscar: ")
             inventario.buscar_producto(nombre)
 
-        elif eleccion == '5':
+        elif opcion == '5':
             inventario.mostrar_productos()
 
-        elif eleccion == '0':
-            print("Saliendo del sistema de gestión de inventarios.")
+        elif opcion == '0':
+            print("Saliendo del sistema...")
             break
-
         else:
-            print("Opción no válida. Intenta de nuevo.")
+            print("Opción inválida. Inténtelo nuevamente.")
 
 
 if __name__ == "__main__":
