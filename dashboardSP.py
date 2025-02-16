@@ -20,6 +20,7 @@ def mostrar_menu():
         '1': 'UNIDAD 2/SEMANA-06.py',
         '2': 'UNIDAD 2/SEMANA-07.py',
         '3': 'UNIDAD 2/ejemplo.txt',
+        '4': 'UNIDAD 3/SEMANA-09.py'
     }
 
     while True:
