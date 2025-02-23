@@ -1,0 +1,10 @@
+{
+    "HARINA": {
+        "cantidad": 1500,
+        "precio": 0.6
+    },
+    "AZUCAR": {
+        "cantidad": 2000,
+        "precio": 0.5
+    }
+}

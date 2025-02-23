@@ -1,0 +1,14 @@
+{
+    "P01": {
+        "identificador": "P01",
+        "nombre": "Monitor",
+        "stock": 7,
+        "precio": 120.5
+    },
+    "P02": {
+        "identificador": "P02",
+        "nombre": "USB 16GB",
+        "stock": 25,
+        "precio": 8.99
+    }
+}
